@@ -1,22 +1,37 @@
 module.exports = (app) => {
-	app.get('/highscores', (req, res) => {
-		req.highscores.findAll({ limit: 10 }).then((scores) => {
+	app.get('/highscores/:game', (req, res) => {
+		const { game } = req.params;
+		if (!game) {
+			return res.json({ error: 'must supply the game' });
+		}
+		req.highscores.findAll({ limit: 10, where: { game } }).then((scores) => {
 			res.json({ scores });
 		});
 	});
 
-	app.post('/highscores', (req, res) => {
+	app.get('/highscores', (req, res) => {
+		req.highscores.findAll().then((scores) => {
+			res.json({ scores });
+		});
+	});
+
+	app.post('/highscores/:game', (req, res) => {
 		const Model = req.highscores;
 		const { initials, score } = req.body;
+		const { game } = req.params;
+
+		if (!game) {
+			return res.json({ error: 'must supply game' });
+		}
 
 		if (!score || isNaN(parseInt(score)) || parseInt(score) < 1) {
 			return res.json({ error: 'must submit a valid score' });
 		}
 
 		const newScore = new Model({
-			// initials: initials ? initials.slice(0, 4) : null,
 			...(initials && { initials: initials.slice(0, 4) }),
 			score: parseInt(score),
+			game,
 		});
 
 		newScore

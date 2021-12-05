@@ -13,6 +13,10 @@ module.exports = (sequelize) => {
 				type: DataTypes.STRING(4),
 				defaultValue: 'Anon',
 			},
+			game: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
 			score: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
