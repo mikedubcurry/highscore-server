@@ -6,7 +6,7 @@ services:
     working_dir: /server
     volumes:
       - ./server:/server
-    command: npm run dev
+    command: npm install && npm run start
     environment:
       PORT: '8080'
       dbStorage: 'highscore-db/storage.sqlite'
